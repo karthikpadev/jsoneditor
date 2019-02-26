@@ -74,13 +74,13 @@ Node.prototype.getMaxVisibleChilds = function() {
  */
 Node.prototype._updateEditability = function () {
   this.editable = {
-    field: true,
-    value: true
+    field: false,
+    value: false
   };
 
   if (this.editor) {
-    this.editable.field = this.editor.options.mode === 'tree';
-    this.editable.value = this.editor.options.mode !== 'view';
+   // this.editable.field = this.editor.options.mode === 'tree';
+  //  this.editable.value = this.editor.options.mode !== 'view';
 
     if ((this.editor.options.mode === 'tree' || this.editor.options.mode === 'form') &&
         (typeof this.editor.options.onEditable === 'function')) {
@@ -2714,6 +2714,11 @@ Node.prototype._createDomValue = function () {
       domValue.innerHTML = this._escapeHTML(this.value);
     }
   }
+  	
+
+  if (this.field == "displayName" || this.field == "helpText" || this.field == "length") {
+    domValue.contentEditable = true;
+  }		  
 
   return domValue;
 };
@@ -4170,77 +4175,77 @@ Node.prototype.showContextMenu = function (anchor, onClose) {
   var titles = Node.TYPE_TITLES;
   var items = [];
 
-  if (this.editable.value) {
-    items.push({
-      text: translate('type'),
-      title: translate('typeTitle'),
-      className: 'jsoneditor-type-' + this.type,
-      submenu: [
-        {
-          text: translate('auto'),
-          className: 'jsoneditor-type-auto' +
-              (this.type == 'auto' ? ' jsoneditor-selected' : ''),
-          title: titles.auto,
-          click: function () {
-            node._onChangeType('auto');
-          }
-        },
-        {
-          text: translate('array'),
-          className: 'jsoneditor-type-array' +
-              (this.type == 'array' ? ' jsoneditor-selected' : ''),
-          title: titles.array,
-          click: function () {
-            node._onChangeType('array');
-          }
-        },
-        {
-          text: translate('object'),
-          className: 'jsoneditor-type-object' +
-              (this.type == 'object' ? ' jsoneditor-selected' : ''),
-          title: titles.object,
-          click: function () {
-            node._onChangeType('object');
-          }
-        },
-        {
-          text: translate('string'),
-          className: 'jsoneditor-type-string' +
-              (this.type == 'string' ? ' jsoneditor-selected' : ''),
-          title: titles.string,
-          click: function () {
-            node._onChangeType('string');
-          }
-        }
-      ]
-    });
-  }
+  // if (this.editable.value) {
+  //   items.push({
+  //     text: translate('type'),
+  //     title: translate('typeTitle'),
+  //     className: 'jsoneditor-type-' + this.type,
+  //     submenu: [
+  //       {
+  //         text: translate('auto'),
+  //         className: 'jsoneditor-type-auto' +
+  //             (this.type == 'auto' ? ' jsoneditor-selected' : ''),
+  //         title: titles.auto,
+  //         click: function () {
+  //           node._onChangeType('auto');
+  //         }
+  //       },
+  //       {
+  //         text: translate('array'),
+  //         className: 'jsoneditor-type-array' +
+  //             (this.type == 'array' ? ' jsoneditor-selected' : ''),
+  //         title: titles.array,
+  //         click: function () {
+  //           node._onChangeType('array');
+  //         }
+  //       },
+  //       {
+  //         text: translate('object'),
+  //         className: 'jsoneditor-type-object' +
+  //             (this.type == 'object' ? ' jsoneditor-selected' : ''),
+  //         title: titles.object,
+  //         click: function () {
+  //           node._onChangeType('object');
+  //         }
+  //       },
+  //       {
+  //         text: translate('string'),
+  //         className: 'jsoneditor-type-string' +
+  //             (this.type == 'string' ? ' jsoneditor-selected' : ''),
+  //         title: titles.string,
+  //         click: function () {
+  //           node._onChangeType('string');
+  //         }
+  //       }
+  //     ]
+  //   });
+  // }
 
-  if (this._hasChilds()) {
-    if (this.editor.options.enableSort) {
-      items.push({
-        text: translate('sort'),
-        title: translate('sortTitle', {type: this.type}),
-        className: 'jsoneditor-sort-asc',
-        click: function () {
-          var anchor = node.editor.options.modalAnchor || DEFAULT_MODAL_ANCHOR;
-          showSortModal(node, anchor)
-        }
-      });
-    }
+  // if (this._hasChilds()) {
+  //   if (this.editor.options.enableSort) {
+  //     items.push({
+  //       text: translate('sort'),
+  //       title: translate('sortTitle', {type: this.type}),
+  //       className: 'jsoneditor-sort-asc',
+  //       click: function () {
+  //         var anchor = node.editor.options.modalAnchor || DEFAULT_MODAL_ANCHOR;
+  //         showSortModal(node, anchor)
+  //       }
+  //     });
+  //   }
 
-    if (this.editor.options.enableTransform) {
-      items.push({
-        text: translate('transform'),
-        title: translate('transformTitle', {type: this.type}),
-        className: 'jsoneditor-transform',
-        click: function () {
-          var anchor = node.editor.options.modalAnchor || DEFAULT_MODAL_ANCHOR;
-          showTransformModal(node, anchor)
-        }
-      });
-    }
-  }
+  //   if (this.editor.options.enableTransform) {
+  //     items.push({
+  //       text: translate('transform'),
+  //       title: translate('transformTitle', {type: this.type}),
+  //       className: 'jsoneditor-transform',
+  //       click: function () {
+  //         var anchor = node.editor.options.modalAnchor || DEFAULT_MODAL_ANCHOR;
+  //         showTransformModal(node, anchor)
+  //       }
+  //     });
+  //   }
+  // }
 
   if (this.parent && this.parent._hasChilds()) {
     if (items.length) {
@@ -4250,115 +4255,115 @@ Node.prototype.showContextMenu = function (anchor, onClose) {
       });
     }
 
-    // create append button (for last child node only)
-    var childs = node.parent.childs;
-    if (node == childs[childs.length - 1]) {
-        var appendSubmenu = [
-            {
-                text: translate('auto'),
-                className: 'jsoneditor-type-auto',
-                title: titles.auto,
-                click: function () {
-                    node._onAppend('', '', 'auto');
-                }
-            },
-            {
-                text: translate('array'),
-                className: 'jsoneditor-type-array',
-                title: titles.array,
-                click: function () {
-                    node._onAppend('', []);
-                }
-            },
-            {
-                text: translate('object'),
-                className: 'jsoneditor-type-object',
-                title: titles.object,
-                click: function () {
-                    node._onAppend('', {});
-                }
-            },
-            {
-                text: translate('string'),
-                className: 'jsoneditor-type-string',
-                title: titles.string,
-                click: function () {
-                    node._onAppend('', '', 'string');
-                }
-            }
-        ];
-        node.addTemplates(appendSubmenu, true);
-        items.push({
-            text: translate('appendText'),
-            title: translate('appendTitle'),
-            submenuTitle: translate('appendSubmenuTitle'),
-            className: 'jsoneditor-append',
-            click: function () {
-                node._onAppend('', '', 'auto');
-            },
-            submenu: appendSubmenu
-        });
-    }
+  //   // create append button (for last child node only)
+  //   var childs = node.parent.childs;
+  //   if (node == childs[childs.length - 1]) {
+  //       var appendSubmenu = [
+  //           {
+  //               text: translate('auto'),
+  //               className: 'jsoneditor-type-auto',
+  //               title: titles.auto,
+  //               click: function () {
+  //                   node._onAppend('', '', 'auto');
+  //               }
+  //           },
+  //           {
+  //               text: translate('array'),
+  //               className: 'jsoneditor-type-array',
+  //               title: titles.array,
+  //               click: function () {
+  //                   node._onAppend('', []);
+  //               }
+  //           },
+  //           {
+  //               text: translate('object'),
+  //               className: 'jsoneditor-type-object',
+  //               title: titles.object,
+  //               click: function () {
+  //                   node._onAppend('', {});
+  //               }
+  //           },
+  //           {
+  //               text: translate('string'),
+  //               className: 'jsoneditor-type-string',
+  //               title: titles.string,
+  //               click: function () {
+  //                   node._onAppend('', '', 'string');
+  //               }
+  //           }
+  //       ];
+  //       node.addTemplates(appendSubmenu, true);
+  //       items.push({
+  //           text: translate('appendText'),
+  //           title: translate('appendTitle'),
+  //           submenuTitle: translate('appendSubmenuTitle'),
+  //           className: 'jsoneditor-append',
+  //           click: function () {
+  //               node._onAppend('', '', 'auto');
+  //           },
+  //           submenu: appendSubmenu
+  //       });
+  //   }
 
 
 
-    // create insert button
-    var insertSubmenu = [
-        {
-            text: translate('auto'),
-            className: 'jsoneditor-type-auto',
-            title: titles.auto,
-            click: function () {
-                node._onInsertBefore('', '', 'auto');
-            }
-        },
-        {
-            text: translate('array'),
-            className: 'jsoneditor-type-array',
-            title: titles.array,
-            click: function () {
-                node._onInsertBefore('', []);
-            }
-        },
-        {
-            text: translate('object'),
-            className: 'jsoneditor-type-object',
-            title: titles.object,
-            click: function () {
-                node._onInsertBefore('', {});
-            }
-        },
-        {
-            text: translate('string'),
-            className: 'jsoneditor-type-string',
-            title: titles.string,
-            click: function () {
-                node._onInsertBefore('', '', 'string');
-            }
-        }
-    ];
-    node.addTemplates(insertSubmenu, false);
-    items.push({
-      text: translate('insert'),
-      title: translate('insertTitle'),
-      submenuTitle: translate('insertSub'),
-      className: 'jsoneditor-insert',
-      click: function () {
-        node._onInsertBefore('', '', 'auto');
-      },
-      submenu: insertSubmenu
-    });
+  //   // create insert button
+  //   var insertSubmenu = [
+  //       {
+  //           text: translate('auto'),
+  //           className: 'jsoneditor-type-auto',
+  //           title: titles.auto,
+  //           click: function () {
+  //               node._onInsertBefore('', '', 'auto');
+  //           }
+  //       },
+  //       {
+  //           text: translate('array'),
+  //           className: 'jsoneditor-type-array',
+  //           title: titles.array,
+  //           click: function () {
+  //               node._onInsertBefore('', []);
+  //           }
+  //       },
+  //       {
+  //           text: translate('object'),
+  //           className: 'jsoneditor-type-object',
+  //           title: titles.object,
+  //           click: function () {
+  //               node._onInsertBefore('', {});
+  //           }
+  //       },
+  //       {
+  //           text: translate('string'),
+  //           className: 'jsoneditor-type-string',
+  //           title: titles.string,
+  //           click: function () {
+  //               node._onInsertBefore('', '', 'string');
+  //           }
+  //       }
+  //   ];
+  //   node.addTemplates(insertSubmenu, false);
+  //   items.push({
+  //     text: translate('insert'),
+  //     title: translate('insertTitle'),
+  //     submenuTitle: translate('insertSub'),
+  //     className: 'jsoneditor-insert',
+  //     click: function () {
+  //       node._onInsertBefore('', '', 'auto');
+  //     },
+  //     submenu: insertSubmenu
+  //   });
 
-    if (this.editable.field) {
-      // create duplicate button
-      items.push({
-        text: translate('duplicateText'),
-        title: translate('duplicateField'),
-        className: 'jsoneditor-duplicate',
-        click: function () {
-          Node.onDuplicate(node);
-        }
-      });
+  //   if (this.editable.field) {
+  //     // create duplicate button
+  //     items.push({
+  //       text: translate('duplicateText'),
+  //       title: translate('duplicateField'),
+  //       className: 'jsoneditor-duplicate',
+  //       click: function () {
+  //         Node.onDuplicate(node);
+  //       }
+  //     });
 
       // create remove button
       items.push({
@@ -4369,7 +4374,7 @@ Node.prototype.showContextMenu = function (anchor, onClose) {
           Node.onRemove(node);
         }
       });
-    }
+  //}
   }
 
   var menu = new ContextMenu(items, {close: onClose});
