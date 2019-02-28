@@ -4365,15 +4365,18 @@ Node.prototype.showContextMenu = function (anchor, onClose) {
   //       }
   //     });
 
-      // create remove button
-      items.push({
-        text: translate('removeText'),
-        title: translate('removeField'),
-        className: 'jsoneditor-remove',
-        click: function () {
-          Node.onRemove(node);
-        }
-      });
+      // create remove button      
+      //only for object inside array with index
+      if(typeof this.field === 'undefined' && this.index >= 0 && this.type == 'object'){
+        items.push({
+          text: translate('removeText'),
+          title: translate('removeField'),
+          className: 'jsoneditor-remove',
+          click: function () {
+            Node.onRemove(node);
+          }
+        });
+      }
   //}
   }
 
