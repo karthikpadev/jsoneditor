@@ -2716,7 +2716,7 @@ Node.prototype._createDomValue = function () {
   }
   	
 
-  if (this.field == "displayName" || this.field == "helpText" || this.field == "length") {
+  if (this.field == "displayName" || this.field == "helpText" || this.field == "length" || this.field == "maxOccurs") {
     domValue.contentEditable = true;
   }		  
 

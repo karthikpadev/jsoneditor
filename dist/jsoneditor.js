@@ -25,7 +25,7 @@
  *
  * @author  Jos de Jong, <wjosdejong@gmail.com>
  * @version 5.29.1
- * @date    2019-02-26
+ * @date    2019-03-15
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -38511,7 +38511,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  	
 
-	  if (this.field == "displayName" || this.field == "helpText" || this.field == "length") {
+	  if (this.field == "displayName" || this.field == "helpText" || this.field == "length" || this.field == "maxOccurs") {
 	    domValue.contentEditable = true;
 	  }		  
 
@@ -40160,15 +40160,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  //       }
 	  //     });
 
-	      // create remove button
-	      items.push({
-	        text: translate('removeText'),
-	        title: translate('removeField'),
-	        className: 'jsoneditor-remove',
-	        click: function () {
-	          Node.onRemove(node);
-	        }
-	      });
+	      // create remove button      
+	      //only for object inside array with index
+	      if(typeof this.field === 'undefined' && this.index >= 0 && this.type == 'object'){
+	        items.push({
+	          text: translate('removeText'),
+	          title: translate('removeField'),
+	          className: 'jsoneditor-remove',
+	          click: function () {
+	            Node.onRemove(node);
+	          }
+	        });
+	      }
 	  //}
 	  }
 
