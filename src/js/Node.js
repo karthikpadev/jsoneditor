@@ -2716,7 +2716,8 @@ Node.prototype._createDomValue = function () {
   }
   	
 
-  if (this.field == "displayName" || this.field == "helpText" || this.field == "length" || this.field == "maxOccurs") {
+  if (this.field == "display" || this.field == "displayName" || this.field == "helpText" 
+		|| this.field == "maxOccurs" || this.field == "length" || this.field == "default" || this.field == "fixed") {
     domValue.contentEditable = true;
   }		  
 
